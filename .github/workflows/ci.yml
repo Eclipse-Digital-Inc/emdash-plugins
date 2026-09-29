@@ -1,0 +1,37 @@
+name: "CI"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: "Validate, typecheck, and test plugins"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check out repository"
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: "Set up Node.js"
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: "*/package-lock.json"
+
+      - name: "Check each plugin"
+        shell: bash
+        run: |
+          set -euo pipefail
+          for manifest in */emdash-plugin.jsonc; do
+            dir="$(dirname "$manifest")"
+            echo "::group::$dir"
+            (cd "$dir" && npm ci --legacy-peer-deps && npm run typecheck && npm test && npm run build)
+            echo "::endgroup::"
+          done
