@@ -1,0 +1,59 @@
+{
+	"$schema": "./node_modules/@emdash-cms/plugin-cli/schemas/emdash-plugin.schema.json",
+
+	"slug": "seo-guard",
+	// eclipsedigi.bsky.social (DID is stable if the handle changes).
+	"publisher": "did:plc:u6uomfqtinodqei7xyl4ewe3",
+
+	"license": "MIT",
+	"repo": "https://github.com/Eclipse-Digital-Inc/emdash-plugins",
+	"author": { "name": "Eclipse Digital" },
+	"security": { "email": "eschultz@eclipse-digital.com" },
+	"description": "Blocks publishing posts that fail SEO basics (title and description length, featured image, slug) and reports what needs fixing.",
+
+	// Trust contract — what runtime APIs the plugin asks for.
+	// hooks.content-policy:register — reject publish/schedule (grants no content access).
+	// content:read — scan published entries for the admin report and widget.
+	"capabilities": ["hooks.content-policy:register", "content:read"],
+	"allowedHosts": [],
+	"storage": {},
+
+	"admin": {
+		"pages": [{ "path": "/report", "label": "SEO report", "icon": "chart" }],
+		"widgets": [{ "id": "seo-health", "title": "SEO health", "size": "half" }],
+		"settingsSchema": {
+			"mode": {
+				"type": "select",
+				"label": "Mode",
+				"description": "Block rejects publish and schedule actions that fail checks. Warn only reports them.",
+				"options": [
+					{ "value": "block", "label": "Block publishing" },
+					{ "value": "warn", "label": "Warn only" },
+					{ "value": "off", "label": "Off" },
+				],
+				"default": "block",
+			},
+			"collections": {
+				"type": "string",
+				"label": "Collections",
+				"description": "Comma-separated collection slugs to check.",
+				"default": "posts",
+			},
+			"titleField": { "type": "string", "label": "Title field", "default": "title" },
+			"descriptionField": {
+				"type": "string",
+				"label": "Description field",
+				"description": "Field used as the meta description when the core SEO panel is empty.",
+				"default": "excerpt",
+			},
+			"imageField": { "type": "string", "label": "Featured image field", "default": "featured_image" },
+			"requireDescription": { "type": "boolean", "label": "Require a description", "default": true },
+			"requireImage": { "type": "boolean", "label": "Require a featured image", "default": true },
+			"titleMin": { "type": "number", "label": "Title minimum length", "default": 15, "min": 0 },
+			"titleMax": { "type": "number", "label": "Title maximum length", "default": 60, "min": 0 },
+			"descriptionMin": { "type": "number", "label": "Description minimum length", "default": 50, "min": 0 },
+			"descriptionMax": { "type": "number", "label": "Description maximum length", "default": 160, "min": 0 },
+			"slugMax": { "type": "number", "label": "Slug maximum length", "default": 75, "min": 0 },
+		},
+	},
+}
