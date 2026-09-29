@@ -34,7 +34,10 @@
 		"@emdash-cms/blocks": "^1.0.1",
 		"@emdash-cms/plugin-cli": "0.13.1",
 		"@emdash-cms/plugin-test": "^0.2.6",
+		"astro": "^7.3.5",
 		"emdash": "^1.0.1",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
 		"typescript": "^5.9.0",
 		"vitest": "^4.1.0"
 	},
